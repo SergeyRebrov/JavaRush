@@ -37,7 +37,7 @@ public class ConsoleHelper
             try {
                 dishList.add(Dish.valueOf(dish));
             } catch (IllegalArgumentException e)
-            {writeMessage("Блюдо не найдено! " + dish);}
+            {writeMessage(dish + " is not detected ");}
         } while (true);
 
         return dishList;
