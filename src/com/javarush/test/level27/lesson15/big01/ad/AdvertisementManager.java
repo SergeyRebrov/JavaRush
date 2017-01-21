@@ -24,20 +24,10 @@ public class AdvertisementManager
 
     public void processVideos() throws NoVideoAvailableException
     {
-        List<Advertisement> videos = new ArrayList<>();
+        List<Advertisement> set = new ArrayList<>();
+        List<Advertisement> videos = recursion(storage.list(), set, 0, storage.list().size() - 1);
 
-        int getSeconds = timeSeconds;
-
-        for (Advertisement advertisement : storage.list())
-        {
-            if (advertisement.getDuration() <= getSeconds)
-            {
-                videos.add(advertisement);
-                getSeconds -= advertisement.getDuration();
-            }
-        }
-
-        if (videos.isEmpty() || getSeconds == timeSeconds)
+        if (videos.isEmpty())
             throw new NoVideoAvailableException();
 
         Collections.sort(videos, new Comparator<Advertisement>()
@@ -63,5 +53,61 @@ public class AdvertisementManager
                     ", " + advertisement.getAmountPerOneDisplaying() * 1000 / advertisement.getDuration());
             advertisement.revalidate();
         }
+    }
+
+    public List<Advertisement> recursion(List<Advertisement> list, List<Advertisement> set, int listPosition, int limit)
+    {
+        if (listPosition > limit)
+            return set;
+
+        List<Advertisement> oneList = recursion(list, set, listPosition + 1, limit);
+
+        int duration = 0;
+
+        List<Advertisement> newSet = new ArrayList<>(set);
+        if (!newSet.isEmpty())
+            for (Advertisement ad : newSet)
+                duration += ad.getDuration();
+
+        Advertisement advertisement = list.get(listPosition);
+
+        if (duration + advertisement.getDuration() <= timeSeconds && !newSet.contains(advertisement) && advertisement.getHits() > 0)
+            newSet.add(advertisement);
+
+        List<Advertisement> twoList = recursion(list, newSet, listPosition + 1, limit);
+
+
+        int oneMaxAmount = 0;
+        int oneMaxDuration = 0;
+        int oneMaxVideos = oneList.size();
+
+        for (Advertisement ad : oneList)
+        {
+            oneMaxAmount += ad.getAmountPerOneDisplaying();
+            oneMaxDuration += ad.getDuration();
+        }
+
+        int twoMaxAmount = 0;
+        int twoMaxDuration = 0;
+        int twoMaxVideos = twoList.size();
+
+        for (Advertisement ad : twoList)
+        {
+            twoMaxAmount += ad.getAmountPerOneDisplaying();
+            twoMaxDuration += ad.getDuration();
+        }
+
+        if (oneMaxAmount > twoMaxAmount)
+            return oneList;
+        else if (oneMaxAmount < twoMaxAmount)
+            return twoList;
+        else if (oneMaxDuration > twoMaxDuration)
+            return oneList;
+        else if (oneMaxDuration < twoMaxDuration)
+            return twoList;
+        else if (oneMaxVideos > twoMaxVideos)
+            return twoList;
+        else
+            return oneList;
     }
 }

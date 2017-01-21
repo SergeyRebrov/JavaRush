@@ -21,12 +21,20 @@ public class Advertisement
         this.hits = hits;
         this.duration = duration;
 
-        amountPerOneDisplaying = initialAmount / hits;
+        if (hits == 0)
+            amountPerOneDisplaying = 0;
+        else
+            amountPerOneDisplaying = initialAmount / hits;
     }
 
     public String getName()
     {
         return name;
+    }
+
+    public int getHits()
+    {
+        return hits;
     }
 
     public int getDuration()
