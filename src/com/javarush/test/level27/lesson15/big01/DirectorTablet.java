@@ -20,6 +20,7 @@ public class DirectorTablet
             System.out.println(String.format(Locale.ENGLISH, "%s - %.2f", entry.getKey(), amount));
         }
         System.out.println(String.format(Locale.ENGLISH, "Total - %.2f", totalAmount));
+        System.out.println();
     }
 
     public void printCookWorkloading() {
