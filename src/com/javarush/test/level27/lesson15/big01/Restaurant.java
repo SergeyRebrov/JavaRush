@@ -11,7 +11,7 @@ import com.javarush.test.level27.lesson15.big01.kitchen.Waitor;
  */
 public class Restaurant
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws InterruptedException
     {
         Tablet tablet = new Tablet(5);
         Cook cook  = new Cook("Amigo");

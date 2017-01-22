@@ -117,6 +117,7 @@ public class StatisticManager
         {
             for (EventType value : EventType.values())
                 eventTypeMap.put(value, new ArrayList<EventDataRow>());
+
         }
 
         private void put(EventDataRow data)

@@ -17,9 +17,9 @@ public class DirectorTablet
         {
             double amount = (double)entry.getValue() / 100;
             totalAmount += amount;
-            System.out.println(entry.getKey() + " - " + amount);
+            System.out.println(String.format(Locale.ENGLISH, "%s - %.2f", entry.getKey(), amount));
         }
-        System.out.println("Total - " + totalAmount);
+        System.out.println(String.format(Locale.ENGLISH, "Total - %.2f", totalAmount));
     }
 
     public void printCookWorkloading() {
