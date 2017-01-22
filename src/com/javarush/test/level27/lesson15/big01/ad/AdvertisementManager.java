@@ -2,6 +2,8 @@ package com.javarush.test.level27.lesson15.big01.ad;
 
 
 import com.javarush.test.level27.lesson15.big01.ConsoleHelper;
+import com.javarush.test.level27.lesson15.big01.statistic.StatisticManager;
+import com.javarush.test.level27.lesson15.big01.statistic.event.VideoSelectedEventDataRow;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,6 +48,15 @@ public class AdvertisementManager
             }
         });
 
+        long totalAmount = 0;
+        int totalDuration = 0;
+        for (Advertisement advertisement : videos)
+        {
+            totalAmount += advertisement.getAmountPerOneDisplaying();
+            totalDuration += advertisement.getDuration();
+        }
+        StatisticManager.getInstance().register(new VideoSelectedEventDataRow(videos, totalAmount, totalDuration));
+
         for (Advertisement advertisement : videos)
         {
             ConsoleHelper.writeMessage(advertisement.getName() +
@@ -77,7 +88,7 @@ public class AdvertisementManager
         List<Advertisement> twoList = recursion(list, newSet, listPosition + 1, limit);
 
 
-        int oneMaxAmount = 0;
+        long oneMaxAmount = 0;
         int oneMaxDuration = 0;
         int oneMaxVideos = oneList.size();
 
@@ -87,7 +98,7 @@ public class AdvertisementManager
             oneMaxDuration += ad.getDuration();
         }
 
-        int twoMaxAmount = 0;
+        long twoMaxAmount = 0;
         int twoMaxDuration = 0;
         int twoMaxVideos = twoList.size();
 
