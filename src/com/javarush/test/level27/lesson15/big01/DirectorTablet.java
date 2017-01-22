@@ -1,11 +1,7 @@
 package com.javarush.test.level27.lesson15.big01;
 
 import com.javarush.test.level27.lesson15.big01.statistic.StatisticManager;
-import com.javarush.test.level27.lesson15.big01.statistic.event.EventDataRow;
-import com.javarush.test.level27.lesson15.big01.statistic.event.VideoSelectedEventDataRow;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -14,28 +10,7 @@ import java.util.*;
 public class DirectorTablet
 {
     public void printAdvertisementProfit() {
-        Map<String, Long> advertisingData = new LinkedHashMap<>();
-
-        List<EventDataRow> eventDataRows = StatisticManager.getInstance().advertisingData();
-        Collections.sort(eventDataRows, new Comparator<EventDataRow>()
-        {
-            @Override
-            public int compare(EventDataRow o1, EventDataRow o2)
-            {
-                return o2.getDate().compareTo(o1.getDate());
-            }
-        });
-
-        for (EventDataRow eventData : eventDataRows)
-        {
-            VideoSelectedEventDataRow videoData = (VideoSelectedEventDataRow)eventData;
-            DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyy");
-            if (advertisingData.containsKey(dateFormat.format(videoData.getDate())))
-                advertisingData.put(dateFormat.format(videoData.getDate()),
-                        advertisingData.get(dateFormat.format(videoData.getDate())) + videoData.getAmount());
-            else
-                advertisingData.put(dateFormat.format(videoData.getDate()), videoData.getAmount());
-        }
+        Map<String, Long> advertisingData = StatisticManager.getInstance().advertisingData();
 
         double totalAmount = 0;
         for (Map.Entry<String, Long> entry : advertisingData.entrySet())
@@ -47,7 +22,20 @@ public class DirectorTablet
         System.out.println("Total - " + totalAmount);
     }
 
-    public void printCookWorkloading() {}
+    public void printCookWorkloading() {
+        Map<String, Map<String, Integer>> cookedData = StatisticManager.getInstance().cookedData();
+
+        for (Map.Entry<String, Map<String, Integer>> entry : cookedData.entrySet())
+        {
+            System.out.println(entry.getKey());
+            for (Map.Entry<String, Integer> entry1 : entry.getValue().entrySet())
+            {
+                double time = (double)entry1.getValue() / 60;
+                System.out.println(entry1.getKey() + " - " + (int)Math.ceil(time) + " min");
+            }
+            System.out.println();
+        }
+    }
 
     public void printActiveVideoSet() {}
 
