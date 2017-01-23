@@ -5,7 +5,6 @@ import com.javarush.test.level27.lesson15.big01.kitchen.Cook;
 import com.javarush.test.level27.lesson15.big01.kitchen.Waitor;
 
 
-
 /**
  * Created by Sergey on 18.01.2017.
  */

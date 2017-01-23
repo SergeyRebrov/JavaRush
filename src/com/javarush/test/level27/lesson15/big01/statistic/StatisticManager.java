@@ -1,6 +1,8 @@
 package com.javarush.test.level27.lesson15.big01.statistic;
 
+import com.javarush.test.level27.lesson15.big01.ad.Advertisement;
 import com.javarush.test.level27.lesson15.big01.kitchen.Cook;
+import com.javarush.test.level27.lesson15.big01.kitchen.Dish;
 import com.javarush.test.level27.lesson15.big01.statistic.event.CookedOrderEventDataRow;
 import com.javarush.test.level27.lesson15.big01.statistic.event.EventDataRow;
 import com.javarush.test.level27.lesson15.big01.statistic.event.EventType;
@@ -126,6 +128,5 @@ public class StatisticManager
         {
             return eventTypeMap.get(eventType);
         }
-
     }
 }

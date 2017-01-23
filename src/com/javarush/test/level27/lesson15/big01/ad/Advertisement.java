@@ -21,10 +21,8 @@ public class Advertisement
         this.hits = hits;
         this.duration = duration;
 
-        if (hits == 0)
-            amountPerOneDisplaying = 0;
-        else
-            amountPerOneDisplaying = initialAmount / hits;
+        this.amountPerOneDisplaying = initialAmount / hits;
+
     }
 
     public String getName()
@@ -51,5 +49,7 @@ public class Advertisement
         if (hits <= 0)
             throw new UnsupportedOperationException();
         hits--;
+        if (hits == 1)
+            amountPerOneDisplaying += initialAmount % amountPerOneDisplaying;
     }
 }
