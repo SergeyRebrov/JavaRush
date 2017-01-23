@@ -6,8 +6,6 @@ import com.javarush.test.level27.lesson15.big01.statistic.event.EventDataRow;
 import com.javarush.test.level27.lesson15.big01.statistic.event.EventType;
 import com.javarush.test.level27.lesson15.big01.statistic.event.VideoSelectedEventDataRow;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -15,7 +13,7 @@ import java.util.*;
  */
 public class StatisticManager
 {
-    private static StatisticManager instance;
+    private static StatisticManager instance = new StatisticManager();
     private static StatisticStorage statisticStorage = getInstance().new StatisticStorage();
 
     private Set<Cook> cooks = new HashSet<>();
@@ -26,8 +24,6 @@ public class StatisticManager
 
     public static StatisticManager getInstance()
     {
-        if (instance == null)
-            instance = new StatisticManager();
         return instance;
     }
 
@@ -41,72 +37,74 @@ public class StatisticManager
         cooks.add(cook);
     }
 
-    public Map<String, Long> advertisingData()
+    public Map<Date, Long> advertisingData()
     {
-        Map<String, Long> advertisingData = new LinkedHashMap<>();
+        Map<Date, Long> advertisingData = new TreeMap<>(Collections.reverseOrder());
 
-        List<EventDataRow> eventDataRows = statisticStorage.advertisingData();
-        Collections.sort(eventDataRows, new Comparator<EventDataRow>()
-        {
-            @Override
-            public int compare(EventDataRow o1, EventDataRow o2)
-            {
-                return o2.getDate().compareTo(o1.getDate());
-            }
-        });
-
-        for (EventDataRow eventData : eventDataRows)
+        for (EventDataRow eventData : statisticStorage.advertisingData())
         {
             VideoSelectedEventDataRow videoData = (VideoSelectedEventDataRow) eventData;
-            DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyy", Locale.ENGLISH);
-            if (advertisingData.containsKey(dateFormat.format(videoData.getDate())))
-                advertisingData.put(dateFormat.format(videoData.getDate()),
-                        advertisingData.get(dateFormat.format(videoData.getDate())) + videoData.getAmount());
+
+            Date newDate = setDate(videoData.getDate());
+            if (advertisingData.containsKey(newDate))
+                advertisingData.put(newDate, advertisingData.get(newDate) + videoData.getAmount());
             else
-                advertisingData.put(dateFormat.format(videoData.getDate()), videoData.getAmount());
+                advertisingData.put(newDate, videoData.getAmount());
         }
         return advertisingData;
     }
 
-    public Map<String, Map<String, Integer>> cookedData()
+    public Map<Date, Map<String, Integer>> cookedData()
     {
-        Map<String, Map<String, Integer>> cookedData = new LinkedHashMap<>();
+        Map<Date, Map<String, Integer>> cookedData = new TreeMap<>(Collections.reverseOrder());
 
-        List<EventDataRow> eventDataRows = statisticStorage.cookedData();
-        Collections.sort(eventDataRows, new Comparator<EventDataRow>()
-        {
-            @Override
-            public int compare(EventDataRow o1, EventDataRow o2)
-            {
-                return o2.getDate().compareTo(o1.getDate());
-            }
-        });
-
-        for (EventDataRow eventData : eventDataRows)
+        for (EventDataRow eventData : statisticStorage.cookedData())
         {
             CookedOrderEventDataRow cooked = (CookedOrderEventDataRow) eventData;
-            DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyy", Locale.ENGLISH);
+
             Map<String, Integer> cook_time = new TreeMap<>();
-            if (cookedData.containsKey(dateFormat.format(cooked.getDate())))
+
+            Date newDate = setDate(cooked.getDate());
+
+            int time = cooked.getTime();
+            if (time == 0)
+                continue;
+
+            if (time % 60 == 0)
+                time = time / 60;
+            else
+                time = time / 60 + 1;
+
+            if (cookedData.containsKey(newDate))
             {
-                cook_time = cookedData.get(dateFormat.format(cooked.getDate()));
+                cook_time = cookedData.get(newDate);
 
                 if (cook_time.containsKey(cooked.getCookName()))
                 {
-                    cook_time.put(cooked.getCookName(), cook_time.get(cooked.getCookName()) + cooked.getTime());
+                    cook_time.put(cooked.getCookName(), cook_time.get(cooked.getCookName()) + time);
                 } else
                 {
-                    cook_time.put(cooked.getCookName(), cooked.getTime());
+                    cook_time.put(cooked.getCookName(), time);
                 }
 
-                cookedData.put(dateFormat.format(cooked.getDate()), cook_time);
+                cookedData.put(newDate, cook_time);
             } else
             {
-                cook_time.put(cooked.getCookName(), cooked.getTime());
-                cookedData.put(dateFormat.format(cooked.getDate()), cook_time);
+                cook_time.put(cooked.getCookName(), time);
+                cookedData.put(newDate, cook_time);
             }
         }
         return cookedData;
+    }
+
+    public Date setDate(Date date) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
     }
 
     private class StatisticStorage
@@ -117,7 +115,6 @@ public class StatisticManager
         {
             for (EventType value : EventType.values())
                 eventTypeMap.put(value, new ArrayList<EventDataRow>());
-
         }
 
         private void put(EventDataRow data)
