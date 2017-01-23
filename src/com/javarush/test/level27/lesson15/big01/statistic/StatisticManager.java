@@ -41,7 +41,7 @@ public class StatisticManager
     {
         Map<Date, Long> advertisingData = new TreeMap<>(Collections.reverseOrder());
 
-        for (EventDataRow eventData : statisticStorage.advertisingData())
+        for (EventDataRow eventData : statisticStorage.getDate(EventType.SELECTED_VIDEOS))
         {
             VideoSelectedEventDataRow videoData = (VideoSelectedEventDataRow) eventData;
 
@@ -58,7 +58,7 @@ public class StatisticManager
     {
         Map<Date, Map<String, Integer>> cookedData = new TreeMap<>(Collections.reverseOrder());
 
-        for (EventDataRow eventData : statisticStorage.cookedData())
+        for (EventDataRow eventData : statisticStorage.getDate(EventType.COOKED_ORDER))
         {
             CookedOrderEventDataRow cooked = (CookedOrderEventDataRow) eventData;
 
@@ -122,14 +122,10 @@ public class StatisticManager
             eventTypeMap.get(data.getType()).add(data);
         }
 
-        private List<EventDataRow> advertisingData()
+        private List<EventDataRow> getDate(EventType eventType)
         {
-            return eventTypeMap.get(EventType.SELECTED_VIDEOS);
+            return eventTypeMap.get(eventType);
         }
 
-        private List<EventDataRow> cookedData()
-        {
-            return eventTypeMap.get(EventType.COOKED_ORDER);
-        }
     }
 }
