@@ -1,8 +1,6 @@
 package com.javarush.test.level27.lesson15.big01.statistic;
 
-import com.javarush.test.level27.lesson15.big01.ad.Advertisement;
 import com.javarush.test.level27.lesson15.big01.kitchen.Cook;
-import com.javarush.test.level27.lesson15.big01.kitchen.Dish;
 import com.javarush.test.level27.lesson15.big01.statistic.event.CookedOrderEventDataRow;
 import com.javarush.test.level27.lesson15.big01.statistic.event.EventDataRow;
 import com.javarush.test.level27.lesson15.big01.statistic.event.EventType;
@@ -13,18 +11,18 @@ import java.util.*;
 /**
  * Created by Sergey on 21.01.2017.
  */
-public class StatisticManager
+public class StatisticEventManager
 {
-    private static StatisticManager instance = new StatisticManager();
+    private static StatisticEventManager instance = new StatisticEventManager();
     private static StatisticStorage statisticStorage = getInstance().new StatisticStorage();
 
     private Set<Cook> cooks = new HashSet<>();
 
-    private StatisticManager()
+    private StatisticEventManager()
     {
     }
 
-    public static StatisticManager getInstance()
+    public static StatisticEventManager getInstance()
     {
         return instance;
     }
