@@ -3,6 +3,7 @@ package com.javarush.test.level27.lesson15.big01;
 import com.javarush.test.level27.lesson15.big01.ad.AdvertisementManager;
 import com.javarush.test.level27.lesson15.big01.ad.NoVideoAvailableException;
 import com.javarush.test.level27.lesson15.big01.kitchen.Order;
+import com.javarush.test.level27.lesson15.big01.kitchen.TestOrder;
 
 import java.io.IOException;
 import java.util.Observable;
@@ -27,22 +28,40 @@ public class Tablet extends Observable
         try
         {
             Order order = new Order(this);
-            if (!order.isEmpty())
-            {
-                ConsoleHelper.writeMessage(order.toString());
-                AdvertisementManager advertisementManager = new AdvertisementManager(order.getTotalCookingTime() * 60);
-                try
-                {
-                    advertisementManager.processVideos();
-                }
-                catch (NoVideoAvailableException e)
-                {
-                    logger.log(Level.INFO, "No video is available for the order " + order);
-                }
-                setChanged();
-                notifyObservers(order);
+            workOrder(order);
+        }
 
+        catch (IOException e)
+        {
+            logger.log(Level.SEVERE, "Console is unavailable.");
+        }
+    }
+
+    private void workOrder(Order order)
+    {
+        if (!order.isEmpty())
+        {
+            ConsoleHelper.writeMessage(order.toString());
+            AdvertisementManager advertisementManager = new AdvertisementManager(order.getTotalCookingTime() * 60);
+            try
+            {
+                advertisementManager.processVideos();
             }
+            catch (NoVideoAvailableException e)
+            {
+                logger.log(Level.INFO, "No video is available for the order " + order);
+            }
+            setChanged();
+            notifyObservers(order);
+
+        }
+    }
+
+    public void createTestOrder() {
+        try
+        {
+            TestOrder order = new TestOrder(this);
+            workOrder(order);
         }
 
         catch (IOException e)
