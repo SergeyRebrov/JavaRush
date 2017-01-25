@@ -41,6 +41,11 @@ public class Order
         return dishes;
     }
 
+    public Tablet getTablet()
+    {
+        return tablet;
+    }
+
     public boolean isEmpty() {
         return dishes.isEmpty();
     }

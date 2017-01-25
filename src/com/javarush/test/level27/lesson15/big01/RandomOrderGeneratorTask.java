@@ -10,9 +10,9 @@ public class RandomOrderGeneratorTask implements Runnable
     private List<Tablet> tabletList;
     private int interval;
 
-    public RandomOrderGeneratorTask(List<Tablet> tabletList, int interval)
+    public RandomOrderGeneratorTask(List<Tablet> tablets, int interval)
     {
-        this.tabletList = tabletList;
+        this.tabletList = tablets;
         this.interval = interval;
     }
 

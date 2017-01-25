@@ -16,7 +16,6 @@ public class StatisticEventManager
     private static StatisticEventManager instance = new StatisticEventManager();
     private static StatisticStorage statisticStorage = getInstance().new StatisticStorage();
 
-    private Set<Cook> cooks = new HashSet<>();
 
     private StatisticEventManager()
     {
@@ -30,11 +29,6 @@ public class StatisticEventManager
     public void register(EventDataRow data)
     {
         statisticStorage.put(data);
-    }
-
-    public void register(Cook cook)
-    {
-        cooks.add(cook);
     }
 
     public Map<Date, Long> advertisingData()
