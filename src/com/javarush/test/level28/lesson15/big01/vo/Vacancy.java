@@ -9,6 +9,8 @@ public class Vacancy
     private String salary;
     private String city;
     private String companyName;
+    private String siteName;
+    private String url;
 
     public String getTitle()
     {
@@ -70,8 +72,31 @@ public class Vacancy
         this.url = url;
     }
 
-    private String siteName;
-    private String url;
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Vacancy vacancy = (Vacancy) o;
 
+        if (!title.equals(vacancy.title)) return false;
+        if (!salary.equals(vacancy.salary)) return false;
+        if (!city.equals(vacancy.city)) return false;
+        if (!companyName.equals(vacancy.companyName)) return false;
+        if (!siteName.equals(vacancy.siteName)) return false;
+        return url.equals(vacancy.url);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = title.hashCode();
+        result = 31 * result + salary.hashCode();
+        result = 31 * result + city.hashCode();
+        result = 31 * result + companyName.hashCode();
+        result = 31 * result + siteName.hashCode();
+        result = 31 * result + url.hashCode();
+        return result;
+    }
 }
