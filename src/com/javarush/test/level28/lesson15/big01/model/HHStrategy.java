@@ -26,7 +26,7 @@ public class HHStrategy implements Strategy
         try
         {
             int page = 0;
-            while ((document = getDocument("Kiev", page)) != null)
+            while ((document = getDocument(searchString, page)) != null)
             {
                 List<Element> elements = document.getElementsByAttributeValue("data-qa", "vacancy-serp__vacancy");
                 if (elements != null && !elements.isEmpty())
