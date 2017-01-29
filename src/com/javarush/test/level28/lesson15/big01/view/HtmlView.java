@@ -46,7 +46,7 @@ public class HtmlView implements View
 
     public void userCitySelectEmulationMethod()
     {
-        controller.onCitySelect("Odessa");
+        controller.onCitySelect("Barnaul");
     }
 
     private String getUpdatedFileContent(List<Vacancy> vacancies) throws IOException
