@@ -51,41 +51,11 @@ public class Solution
         while (scannerTwo.hasNextLine())
             stringsTwo.add(scannerTwo.nextLine());
 
-        one:
-        for (int i = 0; i < stringsOne.size(); i++)
-        {
-            String string1 = stringsOne.get(i);
-            String string2 = null;
-
-            for (int j = 0; j < stringsTwo.size(); j++)
-            {
-                string2 = stringsTwo.get(j);
-                if (string1.equals(string2))
-                {
-                    lines.add(new LineItem(Type.SAME, string1));
-                    continue one;
-                }
-
-                for (int y = 0; y < stringsOne.size(); y++)
-                {
-                    if (stringsOne.get(y).equals(string2))
-                    {
-                        continue;
-                    }
-                }
-                lines.add(new LineItem(Type.ADDED, string2));
-            }
-            lines.add(new LineItem(Type.REMOVED, string1));
-        }
+        linesAdd(stringsOne, stringsTwo);
 
         reader.close();
         scannerOne.close();
         scannerTwo.close();
-
-        for (LineItem line : lines)
-            System.out.println(line.type.toString() + " " + line.line);
-
-
     }
 
 
@@ -105,6 +75,42 @@ public class Solution
         {
             this.type = type;
             this.line = line;
+        }
+    }
+
+    public static void linesAdd(List<String> one, List<String> two)
+    {
+        int numberOne = 0;
+        int numberTwo = 0;
+        while (true)
+        {
+            try
+            {
+                if (one.get(numberOne).equals(two.get(numberTwo)))
+                {
+                    lines.add(new LineItem(Type.SAME, one.get(numberOne)));
+                    numberOne++;
+                    numberTwo++;
+                } else if (one.get(++numberOne).equals(two.get(numberTwo)))
+                    lines.add(new LineItem(Type.REMOVED, one.get(numberOne - 1)));
+                else
+                {
+                    lines.add(new LineItem(Type.ADDED, two.get(numberTwo)));
+                    numberOne--;
+                    numberTwo++;
+                }
+            }
+            catch (IndexOutOfBoundsException e)
+            {
+                if (numberOne < one.size())
+                    lines.add(new LineItem(Type.REMOVED, one.get(numberOne)));
+                else if (numberTwo < two.size())
+                    lines.add(new LineItem(Type.ADDED, two.get(numberTwo)));
+                else
+                    break;
+                numberOne++;
+                numberTwo++;
+            }
         }
     }
 }
