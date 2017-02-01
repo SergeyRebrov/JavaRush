@@ -2,7 +2,8 @@ package com.javarush.test.level29.lesson15.big01.car;
 
 import java.util.Date;
 
-public class Car {
+public abstract class Car
+{
     static public final int TRUCK = 0;
     static public final int SEDAN = 1;
     static public final int CABRIOLET = 2;
@@ -18,68 +19,97 @@ public class Car {
     private boolean driverAvailable;
     private int numberOfPassengers;
 
-    public Car(int type, int numberOfPassengers) {
+    protected Car(int type, int numberOfPassengers)
+    {
         this.type = type;
         this.numberOfPassengers = numberOfPassengers;
     }
 
-    public int fill(double numberOfLiters)
+    public void fill(double numberOfLiters) throws Exception
     {
         if (numberOfLiters < 0)
-            return -1;
+            throw new Exception();
         fuel += numberOfLiters;
-        return 0;
     }
 
-    public double getTripConsumption(Date date, int length, Date SummerStart, Date SummerEnd)
+    public boolean isSummer(Date date, Date summerStart, Date summerEnd)
     {
-        double consumption;
-        if (date.before(SummerStart) || date.after(SummerEnd)) {
-            consumption = length * winterFuelConsumption + winterWarmingUp;
-        }
-        else {
-            consumption = length * summerFuelConsumption;
-        }
-        return consumption;
+        if (date.after(summerStart) && date.before(summerEnd))
+            return true;
+        else
+            return false;
     }
 
-    public int getNumberOfPassengersCanBeTransferred() {
-        if (!isDriverAvailable())
-            return 0;
-        if (fuel <= 0)
-            return 0;
-
-        return numberOfPassengers;
+    public double getWinterConsumption(int length)
+    {
+        return length * winterFuelConsumption + winterWarmingUp;
     }
 
-    public boolean isDriverAvailable() {
+    public double getSummerConsumption(int length)
+    {
+        return length * summerFuelConsumption;
+    }
+
+    private boolean canPassengersBeTransferred()
+    {
+        return isDriverAvailable() && fuel > 0;
+    }
+
+    public double getTripConsumption(Date date, int length, Date summerStart, Date summerEnd)
+    {
+        if (isSummer(date, summerStart, summerEnd))
+            return getSummerConsumption(length);
+        else
+            return getWinterConsumption(length);
+    }
+
+    public int getNumberOfPassengersCanBeTransferred()
+    {
+        if (canPassengersBeTransferred())
+            return numberOfPassengers;
+        else
+            return 0;
+    }
+
+    public boolean isDriverAvailable()
+    {
         return driverAvailable;
     }
 
-    public void setDriverAvailable(boolean driverAvailable) {
+    public void setDriverAvailable(boolean driverAvailable)
+    {
         this.driverAvailable = driverAvailable;
     }
 
-    public void startMoving() {
-        if (numberOfPassengers > 0) {
+    public void startMoving()
+    {
+        if (numberOfPassengers > 0)
             fastenPassengersBelts();
-            fastenDriverBelt();
-        } else {
-            fastenDriverBelt();
+        fastenDriverBelt();
+    }
+
+    public void fastenPassengersBelts()
+    {
+    }
+
+    public void fastenDriverBelt()
+    {
+    }
+
+    public abstract int getMaxSpeed();
+
+    public static Car create(int type, int numberOfPassengers)
+    {
+        switch (type)
+        {
+            case TRUCK:
+                return new Truck(numberOfPassengers);
+            case SEDAN:
+                return new Sedan(numberOfPassengers);
+            case CABRIOLET:
+                return new Cabriolet(numberOfPassengers);
+            default:
+                return null;
         }
-    }
-
-    public void fastenPassengersBelts() {
-    }
-
-    public void fastenDriverBelt() {
-    }
-
-    public int getMaxSpeed() {
-        if (type == TRUCK)
-            return 80;
-        if (type == SEDAN)
-            return 120;
-        return 90;
     }
 }
