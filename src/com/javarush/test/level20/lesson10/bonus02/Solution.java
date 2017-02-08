@@ -23,7 +23,6 @@ public class Solution {
     }
 
     public static int getRectangleCount(byte[][] a) {
-
         return 0;
     }
 }
