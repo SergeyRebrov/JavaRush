@@ -1,5 +1,7 @@
 package com.javarush.test.level20.lesson10.bonus04;
 
+import java.io.Serializable;
+import java.util.AbstractList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -51,7 +53,7 @@ import java.util.List;
 Должно быть наследование AbstractList<String>, List<String>, Cloneable, Serializable
 Метод main в тестировании не участвует
 */
-public class Solution extends LinkedList<String>
+public class Solution extends AbstractList<String> implements Cloneable, Serializable
 {
     public static void main(String[] args)
     {
@@ -73,4 +75,15 @@ public class Solution extends LinkedList<String>
     }
 
 
+    @Override
+    public String get(int index)
+    {
+        return null;
+    }
+
+    @Override
+    public int size()
+    {
+        return 0;
+    }
 }
