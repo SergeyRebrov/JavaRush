@@ -1,8 +1,6 @@
 package com.javarush.test.level20.lesson10.bonus01;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /* Алгоритмы-числа
 Число S состоит из M чисел, например, S=370 и M(количество цифр)=3
@@ -17,56 +15,54 @@ getNumbers должен возвращать все такие числа в п�
 
 На выполнение дается 10 секунд и 50 МБ памяти.
 */
-public class Solution
-{
-    public static int[] getNumbers(int N)
-    {
+public class Solution {
+    public static int[] getNumbers(int N) {
         int[] result = null;
-        ArrayList<Integer> numberList = new ArrayList<>();
-        Set<Integer> summ = new HashSet<>();
-        int number = 1;
-        again : while (number <= N)
-        {
-            char[] numberChars = Integer.toString(number).toCharArray();
-            int tmp = 0;
+        List<Integer> integerList = new ArrayList<>();
 
+        int porog = 10;
+        int[] massiv = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-            int d = number;
-            int e = 0;
-            while (d > 0){
-                e += d % 10;
-                d /= 10;
-            }
-            while (summ.iterator().hasNext())
-            {
-                if (summ.iterator().next() == e)
-                {
-                    System.out.println("!" + e);
-                    continue again;
-                }
+        for (int number = 1; number < N; number++) {
+
+            if (number == porog) {
+                porog *= 10;
+                for (int i = 0; i < massiv.length; i++)
+                    massiv[i] *= i;
             }
 
+            int sum = 0;
+            int tmp = number;
 
+            while (tmp > 0) {
+                int x = tmp % 10;
+                sum += massiv[x];
+                if (sum > number)
+                    break;
 
-
-            for (char c : numberChars)
-                tmp += (int) Math.pow(Integer.parseInt(String.valueOf(c)), numberChars.length);
-            if (number == tmp)
-            {
-                numberList.add(number);
-                System.out.println(number);
+                tmp /= 10;
             }
-            number++;
+
+            if (sum == number) {
+                integerList.add(number);
+            }
+
         }
-        result = new int[numberList.size()];
-        for (int j = 0; j < result.length; j++)
-            result[j] = numberList.get(j);
+
+        result = new int[integerList.size()];
+        for (int i = 0; i < result.length; i++)
+            result[i] = integerList.get(i);
+
         return result;
     }
 
-    public static void main(String[] args)
-    {
-        getNumbers(40000000);
-    }
 
+    public static void main(String[] args) throws InterruptedException {
+        long start = System.currentTimeMillis();
+        System.out.println(Arrays.toString(getNumbers(Integer.MAX_VALUE)));
+        long end = System.currentTimeMillis();
+        System.out.println(end - start + " millisecond");
+        System.out.println("memory: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024) + " mb");
+
+    }
 }
