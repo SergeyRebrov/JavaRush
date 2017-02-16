@@ -1,7 +1,10 @@
 package com.javarush.test.level31.lesson02.home01;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /* Проход по дереву файлов
 1. На вход метода main подаются два параметра.
@@ -16,37 +19,16 @@ import java.util.*;
 Все файлы имеют расширение txt.
 */
 public class Solution
-{    public static void main(String[] args) throws IOException
+{
+    private static List<File> fileList = new ArrayList<>();
+    private static File mainFile;
+
+    public static void main(String[] args) throws IOException
     {
-        File path = new File(/*args[0]*/"D:/test");
-        File resultFileAbsolutePath = new File(/*args[1]*/"D:/3.txt");
+        File path = new File(args[0]);
+        mainFile = new File(args[1]);
 
-        List<File> fileList = new ArrayList<>();
-
-        Queue<File> queue = new ArrayDeque<>();
-        queue.addAll(Arrays.asList(path.listFiles()));
-
-        while (!queue.isEmpty()) {
-            File file = queue.poll();
-            if (file.isDirectory())
-                queue.addAll(Arrays.asList(file.listFiles()));
-            else
-            {
-                if (file.length() > 50)
-                    file.delete();
-                else
-                    fileList.add(file);
-            }
-        }
-
-        queue.addAll(Arrays.asList(path.listFiles()));
-
-        while (!queue.isEmpty()) {
-            File file = queue.poll();
-            if (file.isDirectory() && file.listFiles().length == 0)
-                file.delete();
-        }
-
+        removeFile(path);
         Collections.sort(fileList, new Comparator<File>()
         {
             @Override
@@ -56,12 +38,12 @@ public class Solution
             }
         });
 
+        File newFile = new File(mainFile.getParent() + "allFilesContent.txt");
+        mainFile.renameTo(newFile);
+        mainFile = newFile;
 
-        File newFile = new File(resultFileAbsolutePath.getParent() + "allFilesContent.txt");
-        resultFileAbsolutePath.renameTo(newFile);
 
-
-        FileOutputStream fileOutputStream = new FileOutputStream(resultFileAbsolutePath);
+        FileOutputStream fileOutputStream = new FileOutputStream(mainFile);
 
         for (int i = 0; i < fileList.size(); i++) {
             if (i > 0)
@@ -81,6 +63,26 @@ public class Solution
 
     }
 
+    public static void removeFile(File file)
+    {
+        if (file.isDirectory())
+        {
+            if (file.equals(mainFile))
+                return;
+
+            for (File f : file.listFiles())
+                removeFile(f);
+
+            if (file.listFiles().length == 0)
+                file.delete();
+        } else
+        {
+            if (file.length() > 50)
+                file.delete();
+            else
+                fileList.add(file);
+        }
+    }
 
 
 }
