@@ -6,7 +6,6 @@ import java.io.IOException;
 
 public class Archiver {
     public static void main(String[] args) throws IOException {
-
         Operation operation = null;
         do {
             try {
