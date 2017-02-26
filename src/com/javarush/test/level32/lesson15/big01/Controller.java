@@ -1,12 +1,9 @@
 package com.javarush.test.level32.lesson15.big01;
 
-import com.javarush.test.level32.lesson15.big01.listeners.UndoListener;
-
+import javax.swing.*;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
-import java.io.File;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 
 /**
  * Created by Sergey on 24.02.2017.
@@ -27,7 +24,9 @@ public class Controller
         return document;
     }
 
-    public void init() {}
+    public void init() {
+        createNewDocument();
+    }
 
     public void exit() {
         System.exit(0);
@@ -67,6 +66,74 @@ public class Controller
         }
         return writer.toString();
     }
+
+    public void createNewDocument() {
+        view.selectHtmlTab();
+        resetDocument();
+        view.setTitle("HTML редактор");
+        view.resetUndo();
+        currentFile = null;
+    }
+
+    public void openDocument() {
+        view.selectHtmlTab();
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new HTMLFileFilter());
+        int ret = fileChooser.showOpenDialog(view);
+        if (ret == JFileChooser.APPROVE_OPTION)
+        {
+            currentFile = fileChooser.getSelectedFile();
+            resetDocument();
+            view.setTitle(currentFile.getName());
+            try (FileReader fileReader = new FileReader(currentFile))
+            {
+                new HTMLEditorKit().read(fileReader, document, 0);
+            }
+            catch (Exception e)
+            {
+                new ExceptionHandler().log(e);
+            }
+            view.resetUndo();
+        }
+    }
+
+    public void saveDocument() {
+        view.selectHtmlTab();
+        if (currentFile != null)
+        {
+            try (FileWriter fileWriter = new FileWriter(currentFile))
+            {
+                new HTMLEditorKit().write(fileWriter, document, 0, document.getLength());
+            }
+            catch (Exception e)
+            {
+                new ExceptionHandler().log(e);
+            }
+        }
+        else
+            saveDocumentAs();
+    }
+
+    public void saveDocumentAs() {
+        view.selectHtmlTab();
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new HTMLFileFilter());
+        int ret = fileChooser.showSaveDialog(view);
+        if (ret == JFileChooser.APPROVE_OPTION)
+        {
+            currentFile = fileChooser.getSelectedFile();
+            view.setTitle(currentFile.getName());
+            try (FileWriter fileWriter = new FileWriter(currentFile))
+            {
+                new HTMLEditorKit().write(fileWriter, document, 0, document.getLength());
+            }
+            catch (Exception e)
+            {
+                new ExceptionHandler().log(e);
+            }
+        }
+    }
+
 
     public static void main(String[] args)
     {
