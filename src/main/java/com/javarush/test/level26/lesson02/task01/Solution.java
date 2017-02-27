@@ -1,6 +1,7 @@
 package com.javarush.test.level26.lesson02.task01;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
 
 /* Почитать в инете про медиану выборки
@@ -27,12 +28,16 @@ public class Solution
             MEDIAN = array[array.length / 2];
         }
 
-        Arrays.sort(array, (o1, o2) ->
+        Arrays.sort(array, new Comparator<Integer>()
         {
-            int modul1 = Math.abs(MEDIAN - o1);
-            int modul2 = Math.abs(MEDIAN - o2);
+            @Override
+            public int compare(Integer o1, Integer o2)
+            {
+                int modul1 = Math.abs(MEDIAN - o1);
+                int modul2 = Math.abs(MEDIAN - o2);
 
-            return modul1 - modul2;
+                return modul1 - modul2;
+            }
         });
 
         return array;

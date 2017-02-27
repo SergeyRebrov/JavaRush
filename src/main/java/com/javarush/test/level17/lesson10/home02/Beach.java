@@ -5,6 +5,8 @@ package com.javarush.test.level17.lesson10.home02;
 */
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Beach implements Comparable<Beach>
 {
@@ -64,7 +66,14 @@ public class Beach implements Comparable<Beach>
         list.add(new Beach("9", 126.5f, 7));
         list.add(new Beach("10", 46.2f, 9));
 
-        list.sort(Beach::compareTo);
+        Collections.sort(list, new Comparator<Beach>()
+        {
+            @Override
+            public int compare(Beach beach, Beach o)
+            {
+                return beach.compareTo(o);
+            }
+        });
 
         for (Beach b : list)
             System.out.println(b.getName());
