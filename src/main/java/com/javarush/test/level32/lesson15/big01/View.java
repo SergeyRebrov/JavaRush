@@ -32,7 +32,7 @@ public class View extends JFrame implements ActionListener
         }
         catch (Exception e)
         {
-            new ExceptionHandler().log(e);
+            ExceptionHandler.log(e);
         }
     }
 
@@ -145,7 +145,7 @@ public class View extends JFrame implements ActionListener
         }
         catch (CannotRedoException e)
         {
-            new ExceptionHandler().log(e);
+            ExceptionHandler.log(e);
         }
     }
 
@@ -156,7 +156,7 @@ public class View extends JFrame implements ActionListener
         }
         catch (CannotUndoException e)
         {
-            new ExceptionHandler().log(e);
+            ExceptionHandler.log(e);
         }
     }
 

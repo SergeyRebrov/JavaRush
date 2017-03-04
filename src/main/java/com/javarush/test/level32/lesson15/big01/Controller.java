@@ -50,7 +50,7 @@ public class Controller
         }
         catch (Exception e)
         {
-            new ExceptionHandler().log(e);
+            ExceptionHandler.log(e);
         }
     }
 
@@ -62,7 +62,7 @@ public class Controller
         }
         catch (Exception e)
         {
-            new ExceptionHandler().log(e);
+            ExceptionHandler.log(e);
         }
         return writer.toString();
     }
@@ -91,7 +91,7 @@ public class Controller
             }
             catch (Exception e)
             {
-                new ExceptionHandler().log(e);
+                ExceptionHandler.log(e);
             }
             view.resetUndo();
         }
@@ -107,7 +107,7 @@ public class Controller
             }
             catch (Exception e)
             {
-                new ExceptionHandler().log(e);
+                ExceptionHandler.log(e);
             }
         }
         else
@@ -129,7 +129,7 @@ public class Controller
             }
             catch (Exception e)
             {
-                new ExceptionHandler().log(e);
+                ExceptionHandler.log(e);
             }
         }
     }
