@@ -1,7 +1,7 @@
 package com.javarush.test.level34.lesson15.big01.model;
 
+import java.io.*;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,15 +19,90 @@ public class LevelLoader
 
     public GameObjects getLevel(int level)
     {
-        Player player = new Player(20 + Model.FIELD_SELL_SIZE/2, 40 + Model.FIELD_SELL_SIZE/2);
-        Home home = new Home(200 + Model.FIELD_SELL_SIZE/2,200 + Model.FIELD_SELL_SIZE/2);
-        Box box = new Box(60 + Model.FIELD_SELL_SIZE/2, 40 + Model.FIELD_SELL_SIZE/2);
+        Player player = null;
         Set<Wall> walls = new HashSet<>();
-        for (int i = 0; i < 5; i++)
+        Set<Box> boxes = new HashSet<>();
+        Set<Home> homes = new HashSet<>();
+        int maxLevel = 0;
+        try
         {
-            walls.add(new Wall(40 + Model.FIELD_SELL_SIZE/2, 40 * i + Model.FIELD_SELL_SIZE/2));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(levels.toString())));
+
+            while (reader.ready())
+            {
+                String string = reader.readLine();
+                if (string.contains("Maze:"))
+                {
+                    string = string.replaceAll("[^0-9]", "");
+                    if (maxLevel < Integer.parseInt(string))
+                        maxLevel = Integer.parseInt(string);
+                }
+            }
+            if (level > maxLevel)
+                level = level % maxLevel;
+
+            reader.close();
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(levels.toString())));
+
+            while (reader.ready())
+            {
+                String string = reader.readLine();
+                if (string.contains("Maze: " + level))
+                    break;
+            }
+            reader.readLine();
+
+            String[] sizeX = reader.readLine().split(" ");
+            String[] sizeY = reader.readLine().split(" ");
+
+            int width = Integer.parseInt(sizeX[2]);
+            int height = Integer.parseInt(sizeY[2]);
+
+            reader.readLine();
+            reader.readLine();
+            reader.readLine();
+
+            for (int y = 0; y < height; y++)
+            {
+                char[] chars = reader.readLine().toCharArray();
+                for (int x = 0; x < width; x++)
+                {
+                    switch (chars[x])
+                    {
+                        case 'X':
+                            walls.add(new Wall(x * Model.FIELD_SELL_SIZE + Model.FIELD_SELL_SIZE / 2, y * Model.FIELD_SELL_SIZE + Model.FIELD_SELL_SIZE / 2));
+                            break;
+                        case '*':
+                            boxes.add(new Box(x * Model.FIELD_SELL_SIZE + Model.FIELD_SELL_SIZE / 2, y * Model.FIELD_SELL_SIZE + Model.FIELD_SELL_SIZE / 2));
+                            break;
+                        case '.':
+                            homes.add(new Home(x * Model.FIELD_SELL_SIZE + Model.FIELD_SELL_SIZE / 2, y * Model.FIELD_SELL_SIZE + Model.FIELD_SELL_SIZE / 2));
+                            break;
+                        case '@':
+                            player = new Player(x * Model.FIELD_SELL_SIZE + Model.FIELD_SELL_SIZE / 2, y * Model.FIELD_SELL_SIZE + Model.FIELD_SELL_SIZE / 2);
+                            break;
+                        case '&':
+                            boxes.add(new Box(x * Model.FIELD_SELL_SIZE + Model.FIELD_SELL_SIZE / 2, y * Model.FIELD_SELL_SIZE + Model.FIELD_SELL_SIZE / 2));
+                            homes.add(new Home(x * Model.FIELD_SELL_SIZE + Model.FIELD_SELL_SIZE / 2, y * Model.FIELD_SELL_SIZE + Model.FIELD_SELL_SIZE / 2));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+
+            reader.close();
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
 
-        return new GameObjects(walls, new HashSet<Box>(Collections.singletonList(box)), new HashSet<Home>(Collections.singletonList(home)), player);
+        return new GameObjects(walls, boxes, homes, player);
     }
 }

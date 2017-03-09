@@ -13,7 +13,7 @@ public class Model
     private EventListener eventListener;
     private GameObjects gameObjects;
     private int currentLevel = 1;
-    private LevelLoader levelLoader = new LevelLoader(Paths.get("../res/levels.txt"));
+    private LevelLoader levelLoader = new LevelLoader(Paths.get("src/main/java/com/javarush/test/level34/lesson15/big01/res/levels.txt"));
 
     public void setEventListener(EventListener eventListener)
     {
@@ -117,21 +117,19 @@ public class Model
 
     public void checkCompletion()
     {
-        boolean flag = false;
+        boolean yes = true;
+
         for (Home home : gameObjects.getHomes())
         {
-            for (Box box : gameObjects.getBoxes())
-            {
-                if (home.getY() == box.getY() && home.getX() == box.getX())
-                {
-                    flag = true;
-                    break;
-                }
-                flag = false;
-            }
-        }
+            boolean flag = false;
 
-        if (flag)
+            for (Box box : gameObjects.getBoxes())
+                if ((box.getX() == home.getX()) && (box.getY() == home.getY()))
+                    flag = true;
+
+            if (!flag) yes = false;
+        }
+        if (yes)
             eventListener.levelCompleted(currentLevel);
     }
 }
