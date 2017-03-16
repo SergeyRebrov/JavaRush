@@ -21,7 +21,7 @@ public class RedBlackTree {
     }
 
     public boolean isEmpty() {
-        return header.left == EMPTY;
+        return header.right == EMPTY;
     }
 
     public void clear() {
