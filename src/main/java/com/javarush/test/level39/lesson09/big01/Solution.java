@@ -43,5 +43,35 @@ public class Solution {
         System.out.println(logParser.getNumberOfSuccessfulAttemptToSolveTask(18, null, null));
         System.out.println(logParser.getAllSolvedTasksAndTheirNumber(null, new Date()));
         System.out.println(logParser.getAllDoneTasksAndTheirNumber(null, new Date()));
+        System.out.println();
+        System.out.println(logParser.execute("get ip for user = \"Amigo\""));
+        System.out.println(logParser.execute("get ip for event = \"DOWNLOAD_PLUGIN\""));
+        System.out.println(logParser.execute("get ip for date = \"30.08.2012 16:08:40\""));
+        System.out.println(logParser.execute("get ip for status = \"OK\""));
+        System.out.println(logParser.execute("get ip"));
+        System.out.println();
+        System.out.println(logParser.execute("get user for ip = \"192.168.100.2\""));
+        System.out.println(logParser.execute("get user for event = \"WRITE_MESSAGE\""));
+        System.out.println(logParser.execute("get user for date = \"30.08.2012 16:08:40\""));
+        System.out.println(logParser.execute("get user for status = \"FAILED\""));
+        System.out.println(logParser.execute("get user"));
+        System.out.println();
+        System.out.println(logParser.execute("get event for date = \"03.01.2014 03:45:23\""));
+        System.out.println(logParser.execute("get event for ip = \"192.168.100.2\""));
+        System.out.println(logParser.execute("get event for user = \"Amigo\""));
+        System.out.println(logParser.execute("get event for status = \"ERROR\""));
+        System.out.println(logParser.execute("get event"));
+        System.out.println();
+        System.out.println(logParser.execute("get date for user = \"Amigo\""));
+        System.out.println(logParser.execute("get date for event = \"DONE_TASK\""));
+        System.out.println(logParser.execute("get date for ip = \"192.168.100.2\""));
+        System.out.println(logParser.execute("get date for status = \"ERROR\""));
+        System.out.println(logParser.execute("get date"));
+        System.out.println();
+        System.out.println(logParser.execute("get status for user = \"Amigo\""));
+        System.out.println(logParser.execute("get status for ip = \"192.168.100.2\""));
+        System.out.println(logParser.execute("get status for date = \"30.08.2012 16:08:40\""));
+        System.out.println(logParser.execute("get status for event = \"LOGIN\""));
+        System.out.println(logParser.execute("get status"));
     }
 }

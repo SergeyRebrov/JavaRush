@@ -18,28 +18,38 @@ public abstract class LogParserImplUserQuery extends LogParserImplIPQuery implem
         super(logDir);
     }
 
-    @Override
-    public Set<String> getAllUsers()
-    {
-        Set<String> users = new HashSet<>();
-        for (String[] log : logs)
-        {
-            addStringForParameters(null, null, users, log, 1);
-        }
-
-        return users;
-    }
-
-    @Override
-    public int getNumberOfUsers(Date after, Date before)
+    protected Set<String> getUsers(Date after, Date before)
     {
         Set<String> users = new HashSet<>();
         for (String[] log : logs)
         {
             addStringForParameters(after, before, users, log, 1);
         }
+        return users;
+    }
 
-        return users.size();
+    protected Set<String> getUsersForStatus(Status status, Date after, Date before)
+    {
+        Set<String> users = new HashSet<>();
+        for (String[] log : logs)
+        {
+            if (log[4].equals(status.toString()))
+                addStringForParameters(after, before, users, log, 1);
+        }
+
+        return users;
+    }
+
+    @Override
+    public Set<String> getAllUsers()
+    {
+        return getUsers(null, null);
+    }
+
+    @Override
+    public int getNumberOfUsers(Date after, Date before)
+    {
+        return getUsers(after, before).size();
     }
 
     @Override

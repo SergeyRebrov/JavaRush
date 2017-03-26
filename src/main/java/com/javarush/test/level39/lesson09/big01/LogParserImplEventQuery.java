@@ -25,6 +25,18 @@ public abstract class LogParserImplEventQuery extends LogParserImplDateQuery imp
         }
     }
 
+    protected Set<Event> getOkEvents(Date after, Date before)
+    {
+        Set<Event> events = new HashSet<>();
+        for (String[] log : logs)
+        {
+            if (log[4].equals(Status.OK.toString()))
+                addEventForParameters(after, before, events, log);
+        }
+
+        return events;
+    }
+
     @Override
     public int getNumberOfAllEvents(Date after, Date before)
     {
