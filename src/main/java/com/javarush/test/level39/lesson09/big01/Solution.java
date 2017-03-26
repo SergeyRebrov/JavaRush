@@ -73,7 +73,10 @@ public class Solution {
         System.out.println(logParser.execute("get status for date = \"30.08.2012 16:08:40\""));
         System.out.println(logParser.execute("get status for event = \"LOGIN\""));
         System.out.println(logParser.execute("get status"));
-        System.out.println(logParser.execute("get ip for user = \"Eduard Petrovich Morozko\" and date between\n" +
+        System.out.println(logParser.execute("get date for event = \"WRITE_MESSAGE\" and date between\n" +
                 "\"11.12.2013 0:00:00\" and \"03.01.2014 23:59:59\""));
+        System.out.println();
+        System.out.println(logParser.execute("get status for date = \"13.09.2013 5:04:50\" and date between\n" +
+                "\"13.09.2013 5:04:50\" and \"03.01.2014 23:59:59\""));
     }
 }

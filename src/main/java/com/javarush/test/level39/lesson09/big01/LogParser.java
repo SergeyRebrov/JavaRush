@@ -28,8 +28,8 @@ public class LogParser extends LogParserImplEventQuery implements QLQuery
     public Set<Object> execute(String query)
     {
         Set<Object> set = new HashSet<>();
-        String[] parameters = query.split(" ");
-        String field1 = parameters[1];
+        String[] fields = query.split(" ");
+        String field1 = fields[1];
 
         String field2 = "";
         String value1 = "";
@@ -37,7 +37,7 @@ public class LogParser extends LogParserImplEventQuery implements QLQuery
         String value3 = "";
         try
         {
-            field2 = parameters[3];
+            field2 = fields[3];
             value1 = query.split("\"")[1];
             value2 = query.split("\"")[3];
             value3 = query.split("\"")[5];
@@ -48,11 +48,11 @@ public class LogParser extends LogParserImplEventQuery implements QLQuery
         Date after = null;
         Date before = null;
 
-        if (!value2.equals(""))
+        if (!value2.equals("") && !value3.equals(""))
+        {
             after = getCurrentLogDate(value2);
-
-        if (!value3.equals(""))
             before = getCurrentLogDate(value3);
+        }
 
         switch (field1)
         {
@@ -66,7 +66,8 @@ public class LogParser extends LogParserImplEventQuery implements QLQuery
                         set.addAll(getIPsForEvent(Event.valueOf(value1), after, before));
                         break;
                     case "date":
-                        set.addAll(getUniqueIPs(getCurrentLogDate(value1), getCurrentLogDate(value1)));
+                        if (isDateCorrect(after, before, getCurrentLogDate(value1)))
+                            set.addAll(getUniqueIPs(getCurrentLogDate(value1), getCurrentLogDate(value1)));
                         break;
                     case "status":
                         set.addAll(getIPsForStatus(Status.valueOf(value1), after, before));
@@ -95,7 +96,8 @@ public class LogParser extends LogParserImplEventQuery implements QLQuery
                             set.addAll(getDoneTaskUsers(after, before));
                         break;
                     case "date":
-                        set.addAll(getUsers(getCurrentLogDate(value1), getCurrentLogDate(value1)));
+                        if (isDateCorrect(after, before, getCurrentLogDate(value1)))
+                            set.addAll(getUsers(getCurrentLogDate(value1), getCurrentLogDate(value1)));
                         break;
                     case "status":
                         set.addAll(getUsersForStatus(Status.valueOf(value1), after, before));
@@ -113,7 +115,7 @@ public class LogParser extends LogParserImplEventQuery implements QLQuery
                         for (String[] log : logs)
                         {
                             if (log[1].equals(value1))
-                                if (isDateCorrect(after, after, getCurrentLogDate(log[2])))
+                                if (isDateCorrect(after, before, getCurrentLogDate(log[2])))
                                     dates.add(getCurrentLogDate(log[2]));
                         }
                         set.addAll(dates);
@@ -164,7 +166,8 @@ public class LogParser extends LogParserImplEventQuery implements QLQuery
                         set.addAll(getEventsForUser(value1, after, before));
                         break;
                     case "date":
-                        set.addAll(getAllEvents(getCurrentLogDate(value1), getCurrentLogDate(value1)));
+                        if (isDateCorrect(after, before, getCurrentLogDate(value1)))
+                            set.addAll(getAllEvents(getCurrentLogDate(value1), getCurrentLogDate(value1)));
                         break;
                     case "status":
                         if (value1.equals(Status.FAILED.toString()))
@@ -200,11 +203,14 @@ public class LogParser extends LogParserImplEventQuery implements QLQuery
                         set.addAll(statuses);
                         break;
                     case "date":
-                        for (String[] log : logs)
+                        if (isDateCorrect(after, before, getCurrentLogDate(value1)))
                         {
-                            addStatusForParameters(getCurrentLogDate(value1), getCurrentLogDate(value1), statuses, log);
+                            for (String[] log : logs)
+                            {
+                                addStatusForParameters(getCurrentLogDate(value1), getCurrentLogDate(value1), statuses, log);
+                            }
+                            set.addAll(statuses);
                         }
-                        set.addAll(statuses);
                         break;
                     case "event":
                         for (String[] log : logs)
